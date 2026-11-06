@@ -3,269 +3,250 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nama Kamu – 3D Animator</title>
+<title>Tri Wibowo – 3D Animator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Quicksand:wght@500;600&display=swap" rel="stylesheet">
 <style>
-:root{--gap:#171717;--panel:#282828;--head:#333;--field:#1d1d1d;--btn:#545454;--sel:#4772b3;--text:#d9d9d9;--mute:#9a9a9a;--key:#ffc233;--cur:#5a8ee0;
-  --ui:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+:root{--ink:#e9ecff;--mute:#a9b2e6;--line:#aebaff;--amber:#ffc477;--rose:#e0415f;--deep:#090b26;
+  --serif:"Cormorant Garamond",Georgia,serif;--ui:"Quicksand","Segoe UI",system-ui,sans-serif}
 *{box-sizing:border-box;margin:0}
-html,body{height:100%;background:#0a0b1e;color:var(--text);font:12.5px/1.45 var(--ui);overflow:hidden}
+html,body{height:100%;background:#0a0b1e;color:var(--ink);font:500 15px/1.6 var(--ui);overflow:hidden}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
-:focus-visible{outline:2px solid #fff;outline-offset:-2px}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
 
-/* ===== ROOM ===== */
+/* ===== KAMAR ===== */
 .room{position:fixed;inset:0;overflow:hidden}
-.stage{position:absolute;left:50%;top:50%;translate:-50% -50%;width:max(100vw,177.69vh);aspect-ratio:1672/941;
+.stage{position:absolute;left:50%;top:50%;translate:-50% -50%;width:max(100vw,170.24vh);width:max(100vw,170.24dvh);aspect-ratio:1602/941;
   transition:transform 1s cubic-bezier(.65,0,.35,1),filter 1s;will-change:transform}
-.stage img{display:block;width:100%;height:100%}
-.stage.zoom{filter:brightness(1.6) saturate(.8)}
-.hot{position:absolute;left:40.2%;top:44.8%;width:23.8%;height:24.8%;cursor:pointer;border-radius:3px;
-  box-shadow:0 0 0 0 #7fa2ff00;animation:pulse 2.6s ease-in-out infinite}
-.hot:hover,.hot:focus-visible{animation:none;box-shadow:0 0 38px 8px #8fb0ffaa,inset 0 0 40px #8fb0ff55;outline:none;background:#8fb0ff22}
-@keyframes pulse{50%{box-shadow:0 0 30px 4px #7fa2ff77}}
-.cap{position:absolute;left:0;right:0;bottom:3vh;text-align:center;z-index:2;color:#c9d1ff;letter-spacing:.3em;font-size:11px;text-transform:uppercase;opacity:.7;pointer-events:none;transition:opacity .4s}
+.stage.zoom{filter:brightness(1.7) saturate(.8)}
+.pl{position:absolute;inset:0;transform:translate(var(--px,0),var(--py,0)) scale(1.03);transition:transform .35s ease-out}
+.pl img{display:block;width:100%;height:100%}
+.sky{position:absolute;left:31.5%;top:7.4%;width:42.4%;height:37.5%;mix-blend-mode:screen;pointer-events:none}
+.hot{position:absolute;left:37.6%;top:44.8%;width:24.8%;height:24.8%;border-radius:3px;cursor:pointer;
+  transition:box-shadow .3s,background .3s;animation:pulse 2.6s ease-in-out infinite}
+.hot:hover,.hot:focus-visible{animation:none;outline:none;mix-blend-mode:screen;
+  background:radial-gradient(ellipse at center,#e3ecffee 0%,#8fb0ffcc 55%,#6f8dff88 100%);
+  box-shadow:0 0 50px 18px #9ab6ffdd,0 0 160px 70px #6f8dff77}
+@keyframes pulse{50%{box-shadow:0 0 34px 6px #7fa2ff88}}
+.sp{position:absolute;border-radius:12px;cursor:pointer;transition:box-shadow .25s,background .25s}
+.sp:hover,.sp:focus-visible{outline:none;background:#ffe6a818;box-shadow:0 0 26px 4px #ffd98a66}
+.say{position:absolute;transform:translateX(-50%);background:#0d1236ee;border:1px solid #9fb0ff99;padding:5px 12px;border-radius:999px;
+  font-size:clamp(11px,1.1vw,14px);white-space:nowrap;pointer-events:none;z-index:3;animation:up 2.6s ease-out forwards}
+@keyframes up{0%{opacity:0;margin-top:10px}12%,80%{opacity:1}100%{opacity:0;margin-top:-26px}}
+.pt{position:absolute;width:9px;height:12px;border-radius:60% 40% 60% 40%;background:var(--rose);pointer-events:none;z-index:3;animation:fall 2.6s ease-in forwards}
+@keyframes fall{to{transform:translate(var(--dx),22vh) rotate(260deg);opacity:0}}
+.cap{position:absolute;left:0;right:0;bottom:2.5vh;text-align:center;z-index:2;pointer-events:none;color:#cfd6ff;font-size:12px;letter-spacing:.18em;text-shadow:0 1px 6px #000;transition:opacity .4s}
+.cap small{display:block;opacity:.7;letter-spacing:.08em;margin-top:2px}
 .room.in .cap{opacity:0}
 
-/* ===== APP (Blender-style) ===== */
-.app{position:fixed;inset:0;display:grid;grid-template-rows:28px 1fr 118px 22px;gap:3px;background:var(--gap);padding:3px;
-  opacity:0;pointer-events:none;transition:opacity .5s;z-index:5}
-.app.on{opacity:1;pointer-events:auto}
-.top{display:flex;align-items:center;gap:4px;background:var(--head);border-radius:4px;padding:0 6px;overflow-x:auto;white-space:nowrap}
-.top .back{background:var(--btn);padding:2px 10px;border-radius:4px}
-.top .back:hover{background:#666}
-.top .sp{flex:1}
-.tab{padding:3px 12px;border-radius:4px;color:var(--mute)}
-.tab:hover{color:var(--text)}
-.tab.on{background:#4a4a4a;color:#fff}
-.dot{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffb35a,#e87d0d);margin-right:4px;flex:none}
-.main{display:grid;grid-template-columns:34px 1fr 270px;gap:3px;min-height:0}
-.area{background:var(--panel);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
-.ah{background:var(--head);height:24px;flex:none;display:flex;align-items:center;gap:14px;padding:0 10px;color:var(--mute)}
-.ah b{color:var(--text);font-weight:600}
-.tools{align-items:center;padding:6px 0;gap:4px;background:var(--panel)}
-.tools div{width:26px;height:26px;border-radius:4px;display:grid;place-items:center;color:#bbb;font-size:15px}
-.tools div:first-child{background:var(--sel);color:#fff}
-.vwrap{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
-.vp{position:relative;flex:1;min-height:0;display:grid;place-items:center;padding:42px 26px 26px;
-  background:linear-gradient(#ffffff0d 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,#ffffff0d 1px,transparent 1px) 0 0/40px 40px,#3d3d3d}
-.vp::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:#d9534f66;pointer-events:none}
-.ov{position:absolute;left:12px;top:10px;line-height:1.35;color:#e6e6e6;text-shadow:0 1px 2px #000;pointer-events:none;z-index:2}
-.ov small{display:block;color:#b8b8b8}
-.gz{position:absolute;right:12px;top:10px;z-index:2}
-.cam{position:relative;width:100%;max-width:860px;aspect-ratio:16/9;max-height:100%;border:1px solid #fff9;box-shadow:0 0 0 100vmax #0003;background:#000}
-.cam .tag{position:absolute;left:0;top:-18px;color:#ddd;font-size:11px}
-.poster{position:absolute;inset:0;background:linear-gradient(135deg,var(--a),var(--b));display:grid;place-items:center}
-.poster::before{content:"";position:absolute;inset:0;background:linear-gradient(#ffffff14 1px,transparent 1px) 0 0/32px 32px,linear-gradient(90deg,#ffffff14 1px,transparent 1px) 0 0/32px 32px}
-.play{position:relative;width:64px;height:64px;border-radius:50%;border:2px solid #fff;background:#0007;display:grid;place-items:center;transition:transform .2s,background .2s}
-.play::after{content:"";margin-left:5px;border-left:16px solid #fff;border-top:10px solid transparent;border-bottom:10px solid transparent}
-.play:hover{transform:scale(1.1);background:var(--sel)}
-.cam iframe,.cam video{position:absolute;inset:0;width:100%;height:100%;border:0}
-.note{position:absolute;bottom:10px;left:0;right:0;text-align:center;color:#fff;font-size:12px;text-shadow:0 1px 3px #000}
-.doc{max-width:600px;width:100%;max-height:100%;overflow:auto;background:#262626f2;border:1px solid #555;border-radius:6px;padding:26px 28px}
-.doc h2{font-size:22px;margin-bottom:10px;color:#fff}
-.doc p{color:#cfcfcf;margin-bottom:12px;font-size:14px;line-height:1.65}
-.doc .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+/* ===== LOBBY ===== */
+.lobby{position:fixed;inset:0;z-index:5;background:var(--deep);opacity:0;pointer-events:none;transition:opacity .6s;overflow:hidden}
+.lobby.on{opacity:1;pointer-events:auto}
+.bg{position:absolute;inset:-20px;background:url(room.webp) 55% 10%/240% auto;filter:blur(3px) brightness(.8) saturate(1.2)}
+.bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0a0d2a33,#0a0d2a88 50%,#080a22ee)}
+.stars{position:absolute;inset:0;width:100%;height:100%}
+.chr{position:absolute;left:3vw;bottom:0;height:86vh;max-width:46vw;width:auto;object-fit:contain;object-position:left bottom;
+  filter:drop-shadow(0 0 34px #8f9bff55);animation:bob 5s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px)}}
+.col{position:absolute;right:max(4vw,24px);top:7vh;bottom:5vh;width:clamp(320px,40vw,560px);display:flex;flex-direction:column}
+.ttl{font:700 clamp(2.6rem,6vw,4.8rem)/.95 var(--serif);letter-spacing:-.01em;text-shadow:0 0 30px #8f9bff88}
+.role{color:var(--amber);letter-spacing:.42em;text-transform:uppercase;font-size:13px;margin:8px 0 14px}
+.line{height:2px;background:linear-gradient(90deg,#fff,#ffffff33);flex:none}
+.body{flex:1;min-height:0;overflow:auto;padding:24px 6px 18px 0;scrollbar-width:thin}
+.menu button,.box{display:block;width:64%;margin-bottom:16px;padding:13px 18px;text-align:left;text-decoration:none;letter-spacing:.08em;font-size:1.05rem;
+  border:1px solid #cfd6ff99;background:#0d1236aa;backdrop-filter:blur(4px);color:var(--ink);
+  transition:transform .2s,border-color .2s,box-shadow .2s,background .2s;animation:in .5s both}
+.menu button::before,.box::before{content:"•";margin-right:10px;color:var(--mute)}
+.menu button:hover,.menu button:focus-visible,.box:hover{transform:translateX(8px);border-color:var(--amber);background:#1a1f55cc;box-shadow:0 0 22px #ffc47744}
+.menu button:hover::before,.box:hover::before{content:"✦";color:var(--amber)}
+.menu button:nth-child(2){animation-delay:.07s}.menu button:nth-child(3){animation-delay:.14s}.menu button:nth-child(4){animation-delay:.21s}
+@keyframes in{from{opacity:0;transform:translateX(24px)}}
+.h2{font:700 1.6rem var(--serif);margin-bottom:14px;color:var(--amber);letter-spacing:.04em}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{text-align:left;animation:in .5s both}
+.th{display:block;aspect-ratio:16/10;position:relative;border:1px solid #cfd6ff77;
+  background:var(--i,none) center/cover,linear-gradient(135deg,var(--a),var(--b));transition:border-color .2s,box-shadow .2s}
+.th::before{content:"";position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px;border:1.5px solid #fff;border-radius:50%;background:#0007}
+.th::after{content:"";position:absolute;left:50%;top:50%;margin:-8px -5px;border-left:13px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent}
+.card:hover .th,.card:focus-visible .th{border-color:var(--amber);box-shadow:0 0 22px #ffc47755}
+.card b{display:block;margin-top:8px;font-weight:600}
+.card small{color:var(--mute)}
+.txt p{color:#d3d8f5;margin-bottom:14px}
+.txt .box{width:100%}
+.back{align-self:flex-start;margin-top:14px;padding:6px 18px;letter-spacing:.3em;font-size:13px;border:1px solid #cfd6ff99;background:#0d1236aa;transition:border-color .2s,color .2s}
+.back:hover{border-color:var(--amber);color:var(--amber)}
+.soc{position:absolute;left:3vw;bottom:2.4vh;z-index:2;display:flex;gap:14px;font-size:12.5px;letter-spacing:.06em}
+.soc a{color:var(--mute);text-decoration:none}.soc a:hover{color:var(--amber)}
 
-/* outliner & properties */
-.side{display:grid;grid-template-rows:minmax(150px,.9fr) 1.1fr;gap:3px;min-height:0}
-.list{overflow:auto;padding:4px 0;flex:1}
-.row-i{display:flex;align-items:center;gap:7px;width:100%;text-align:left;padding:2px 8px 2px calc(8px + var(--d,0)*16px);height:22px}
-.row-i:hover{background:#ffffff12}
-.row-i.on{background:var(--sel);color:#fff}
-.row-i.fold{color:var(--text);cursor:default}
-.ic{width:0;height:0;flex:none;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid #e8a14a}
-.ic.e{border:0;width:9px;height:9px;background:none;border:2px solid #9ec4ff;transform:rotate(45deg)}
-.ic.c{border:0;width:11px;height:8px;background:#c9c9c9;border-radius:1px}
-.props{overflow:auto;padding:8px 10px;flex:1}
-.pn{margin-bottom:10px}
-.pn>h4{font-size:12px;background:var(--head);padding:3px 8px;border-radius:3px;margin-bottom:6px;font-weight:600}
-.f{display:grid;grid-template-columns:78px 1fr;gap:6px;align-items:center;margin:3px 0;color:var(--mute)}
-.f span{background:var(--field);color:var(--text);padding:3px 8px;border-radius:4px;min-height:21px}
-.pn p{color:#c4c4c4;padding:0 2px}
-.b{display:block;width:100%;text-align:center;background:var(--btn);padding:4px;border-radius:4px;margin:4px 0;text-decoration:none;color:var(--text)}
-.b:hover{background:var(--sel);color:#fff}
+/* ===== VIDEO ===== */
+dialog{border:1px solid var(--line);padding:0;width:min(940px,92vw);background:#0b0e2c;color:var(--ink);overflow:hidden;box-shadow:0 0 70px #6f7dff44}
+dialog::backdrop{background:#04051ccc;backdrop-filter:blur(4px)}
+.fr{aspect-ratio:16/9;position:relative;display:grid;place-items:center;text-align:center;padding:20px;background:var(--i,none) center/cover,linear-gradient(135deg,var(--a),var(--b))}
+.fr iframe,.fr video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.info{padding:14px 20px 18px}.info h3{font:700 1.5rem var(--serif)}.info p{color:var(--mute)}
+.x{position:absolute;top:10px;right:10px;z-index:2;width:36px;height:36px;border:1px solid var(--line);background:#090b26;font-size:1rem}
 
-/* timeline */
-.tl{display:grid;grid-template-rows:24px 1fr}
-.tr{display:flex;gap:6px;align-items:center}
-.tr button{background:var(--btn);width:26px;height:18px;border-radius:3px;font-size:10px}
-.tr button:hover{background:#666}
-.trk{position:relative;flex:1;cursor:col-resize;background:var(--panel);overflow:hidden;margin-top:0;
-  background-image:repeating-linear-gradient(90deg,#ffffff14 0 1px,transparent 1px 4.1667%)}
-.rul{position:absolute;top:0;left:0;right:0;height:20px;background:#1f1f1f}
-.rul i{position:absolute;top:3px;font-style:normal;color:var(--mute);font-size:10px;transform:translateX(3px)}
-.kf{position:absolute;top:50px;width:11px;height:11px;margin-left:-5.5px;background:var(--key);transform:rotate(45deg);border:1px solid #6b5200}
-.kf.on{background:#fff}
-.ph{position:absolute;top:0;bottom:0;width:1px;background:var(--cur);pointer-events:none}
-.ph b{position:absolute;top:2px;left:-14px;width:29px;text-align:center;background:var(--cur);color:#fff;border-radius:3px;font-size:10px;line-height:15px}
-.st{display:flex;align-items:center;gap:16px;background:var(--head);border-radius:4px;padding:0 10px;color:var(--mute);font-size:11px}
-
-@media (max-width:860px){
-  html,body{overflow:auto}
-  .app{position:absolute;min-height:100%;height:auto;grid-template-rows:28px auto 100px 22px}
-  .main{grid-template-columns:1fr}
-  .tools{display:none}
-  .vp{min-height:300px}
-  .side{grid-template-rows:auto auto}
-  .list,.props{max-height:260px}
+@media (max-width:820px){
+  .chr{height:58vh;max-width:90vw;opacity:.4;left:-6vw}
+  .col{left:22px;right:22px;width:auto;top:5vh}
+  .menu button,.box{width:100%}
+  .cards{grid-template-columns:1fr}
+  .soc{display:none}
 }
-@media (prefers-reduced-motion:reduce){.stage{transition:none}.hot{animation:none}.app{transition:none}}
+@media (prefers-reduced-motion:reduce){.stage,.pl,.lobby{transition:none}.hot,.chr{animation:none}}
 </style>
 </head>
 <body>
 
 <div class="room" id="room">
-  <div class="stage" id="stage">
+  <div class="stage" id="stage"><div class="pl" id="pl">
     <img src="room.webp" alt="Kamar animator di malam hari dengan monitor menyala di tengah meja">
+    <canvas class="sky" id="rsky" aria-hidden="true"></canvas>
     <button class="hot" id="hot" aria-label="Klik monitor untuk masuk ke portofolio"></button>
-  </div>
-  <div class="cap">Nama Kamu · 3D Animator</div>
+  </div></div>
+  <div class="cap">TRI WIBOWO · 3D ANIMATOR<small>klik monitor untuk masuk · benda kecil di kamar juga bisa diklik</small></div>
 </div>
 
-<div class="app" id="app" aria-hidden="true">
-  <div class="top">
-    <span class="dot"></span>
-    <button class="back" id="back">← Kamar</button>
-    <button class="tab on" data-go="0">Karya</button>
-    <button class="tab" data-go="tentang">Tentang</button>
-    <button class="tab" data-go="kontak">Kontak</button>
-    <span class="sp"></span>
-    <span style="color:var(--mute)">Scene · Nama Kamu</span>
+<div class="lobby" id="lobby" aria-hidden="true">
+  <div class="bg"></div><canvas class="stars" id="lsky" aria-hidden="true"></canvas>
+  <!-- Taruh PNG transparan karaktermu bernama character.png di folder yang sama -->
+  <img class="chr" id="chr" src="character.png" alt="" onerror="this.style.display='none';document.getElementById('ph').style.display='block'">
+  <svg class="chr" id="ph" viewBox="0 0 300 520" style="display:none;height:80vh" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4390"/><stop offset="1" stop-color="#0c1033"/></linearGradient></defs>
+    <path d="M150 60c-40 0-62 28-62 62 0 28 12 48 28 60-60 14-100 50-104 120v218h276V302c-4-70-44-106-104-120 16-12 28-32 28-60 0-34-22-62-62-62z" fill="url(#g)" stroke="#9fb0ff" stroke-opacity=".6" stroke-width="2"/>
+    <path d="M104 190c30 22 62 22 92 0l30 40c-40 24-112 24-152 0z" fill="#ffc477" fill-opacity=".85"/>
+    <text x="150" y="400" text-anchor="middle" fill="#cfd6ff" fill-opacity=".7" font-size="15">taruh character.png di sini</text>
+  </svg>
+  <div class="col">
+    <h1 class="ttl" id="nm"></h1><div class="role">3D Animator</div><div class="line"></div>
+    <div class="body" id="body"></div>
+    <div class="line"></div><button class="back" id="back">BACK</button>
   </div>
-
-  <div class="main">
-    <div class="area tools" aria-hidden="true"><div>↖</div><div>✥</div><div>⟳</div><div>⤢</div><div>✎</div><div>◎</div></div>
-
-    <div class="area">
-      <div class="ah"><b>Object Mode</b><span>View</span><span>Select</span><span>Add</span></div>
-      <div class="vwrap"><div class="vp" id="vp"></div>
-        <div class="ov" id="ov"></div>
-        <svg class="gz" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#ffffff10"/><line x1="32" y1="32" x2="54" y2="38" stroke="#e8546a" stroke-width="2"/><line x1="32" y1="32" x2="32" y2="9" stroke="#6ccb5f" stroke-width="2"/><line x1="32" y1="32" x2="18" y2="46" stroke="#4a90e2" stroke-width="2"/><circle cx="54" cy="38" r="6" fill="#e8546a"/><circle cx="32" cy="9" r="6" fill="#6ccb5f"/><circle cx="18" cy="46" r="6" fill="#4a90e2"/></svg>
-      </div>
-    </div>
-
-    <div class="side">
-      <div class="area"><div class="ah"><b>Outliner</b></div><div class="list" id="list"></div></div>
-      <div class="area"><div class="ah"><b>Properties</b></div><div class="props" id="props"></div></div>
-    </div>
-  </div>
-
-  <div class="area tl">
-    <div class="ah"><b>Timeline</b>
-      <div class="tr"><button id="play" aria-label="Putar otomatis">▶</button><span id="frm">Frame 1</span><span>Start 1</span><span>End 240</span></div>
-    </div>
-    <div class="trk" id="trk"><div class="rul" id="rul"></div><div class="ph" id="ph"><b id="phn">1</b></div></div>
-  </div>
-  <div class="st"><span>Karya terpilih: <b id="sel" style="color:var(--text)"></b></span><span class="sp"></span><span>Portofolio 2026</span></div>
+  <div class="soc" id="soc"></div>
 </div>
+
+<dialog id="box"><button class="x" aria-label="Tutup">✕</button><div class="fr" id="fr"></div><div class="info" id="info"></div></dialog>
 
 <script>
 /* ===== EDIT DI SINI =====
-   video: link embed YouTube/Vimeo (https://www.youtube.com/embed/KODE) atau file (videos/nama.mp4) */
-var ME={name:'Nama Kamu',email:'email@kamu.com',
-  bio:['Halo, aku Nama Kamu, 3D animator berbasis di Indonesia. Aku suka detail kecil yang bikin gerakan terasa hidup: berat badan, timing, dan akting karakter.','Tulis perjalananmu, pengalaman kerja, atau studio tempat kamu pernah bekerja di sini.'],
+   video : link embed YouTube/Vimeo (https://www.youtube.com/embed/KODE) atau file (videos/nama.mp4)
+   thumb : gambar sampul opsional (mis. thumbs/karya1.jpg) */
+var ME={name:'Tri Wibowo',email:'email@kamu.com',
+  bio:['Halo, aku Tri Wibowo, 3D animator berbasis di Indonesia. Aku suka detail kecil yang bikin gerakan terasa hidup: berat badan, timing, dan akting karakter.','Tulis perjalananmu, pengalaman kerja, atau studio tempat kamu pernah bekerja di sini.'],
   tools:['Blender','Maya','Cinema 4D','After Effects','Substance Painter','Unreal Engine'],
   links:[['Instagram','https://www.instagram.com/'],['ArtStation','https://www.artstation.com/'],['YouTube','https://www.youtube.com/']]};
 var WORKS=[
- {t:'Judul Proyek Satu',cat:'Animasi karakter',sw:'Blender',yr:'2026',len:'0:45',desc:'Deskripsi singkat proyek: ceritanya, perananmu, dan tantangan teknisnya.',video:'',a:'#2f4bff',b:'#8a6bff'},
- {t:'Walk Cycle',cat:'Rigging dan animasi',sw:'Maya',yr:'2026',len:'0:10',desc:'Siklus jalan karakter dengan fokus pada berat dan ritme.',video:'',a:'#ff4fd8',b:'#8a6bff'},
- {t:'Product Reveal',cat:'Motion graphics',sw:'Cinema 4D',yr:'2025',len:'0:20',desc:'Animasi pengungkapan produk untuk iklan.',video:'',a:'#0b1230',b:'#3a56d4'},
- {t:'Short Film',cat:'Cinematic',sw:'Blender',yr:'2025',len:'2:30',desc:'Film pendek dari storyboard sampai render akhir.',video:'',a:'#0fb5c9',b:'#2f4bff'},
- {t:'Creature Run',cat:'Animasi kreatur',sw:'Maya',yr:'2025',len:'0:15',desc:'Animasi lari kreatur berkaki empat.',video:'',a:'#6a3cff',b:'#ff4fd8'},
- {t:'Loop Pendek',cat:'Motion loop',sw:'Blender',yr:'2024',len:'0:05',desc:'Loop pendek yang mulus untuk media sosial.',video:'',a:'#1b2a6b',b:'#5ef0ff'}];
+ {t:'Judul Proyek Satu',cat:'Animasi karakter',sw:'Blender',yr:'2026',desc:'Deskripsi singkat proyek: ceritanya, perananmu, dan tantangan teknisnya.',video:'',thumb:'',a:'#2f4bff',b:'#8a6bff'},
+ {t:'Walk Cycle',cat:'Rigging dan animasi',sw:'Maya',yr:'2026',desc:'Siklus jalan karakter dengan fokus pada berat dan ritme.',video:'',thumb:'',a:'#ff4fd8',b:'#8a6bff'},
+ {t:'Product Reveal',cat:'Motion graphics',sw:'Cinema 4D',yr:'2025',desc:'Animasi pengungkapan produk untuk iklan.',video:'',thumb:'',a:'#0b1230',b:'#3a56d4'},
+ {t:'Short Film',cat:'Cinematic',sw:'Blender',yr:'2025',desc:'Film pendek dari storyboard sampai render akhir.',video:'',thumb:'',a:'#0fb5c9',b:'#2f4bff'},
+ {t:'Creature Run',cat:'Animasi kreatur',sw:'Maya',yr:'2025',desc:'Animasi lari kreatur berkaki empat.',video:'',thumb:'',a:'#6a3cff',b:'#ff4fd8'},
+ {t:'Loop Pendek',cat:'Motion loop',sw:'Blender',yr:'2024',desc:'Loop pendek yang mulus untuk media sosial.',video:'',thumb:'',a:'#1b2a6b',b:'#5ef0ff'}];
 /* ========================= */
 
 var $=function(i){return document.getElementById(i)};
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
-var KF=[20,60,100,140,180,220],cur=0,frame=KF[0],timer=0;
+var still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var room=$('room'),stage=$('stage'),pl=$('pl'),lobby=$('lobby'),body=$('body'),view='menu',busy=false;
 
-/* masuk / keluar kamar */
-var room=$('room'),stage=$('stage'),app=$('app');
+/* bintang berkelip + bintang jatuh */
+function sky(cv,n,avoid){
+  var c=cv.getContext('2d'),W,H,d,S=[],sh=null,run=false,nx=0;
+  function rs(){d=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*d;cv.height=H*d}
+  for(var i=0;i<n;i++){var x;do{x=Math.random()}while(avoid&&x>.405&&x<.465);S.push({x:x,y:Math.random(),r:.5+Math.random()*1.1,p:Math.random()*6.3,s:still?0:.6+Math.random()*1.6})}
+  function shoot(){sh={x:.25+Math.random()*.7,y:Math.random()*.35,t:0}}
+  function loop(ts){
+    if(!run)return;
+    c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,W,H);c.fillStyle='#dfe6ff';
+    S.forEach(function(s){c.globalAlpha=.35+.65*Math.abs(Math.sin(ts/1000*s.s+s.p));c.beginPath();c.arc(s.x*W,s.y*H,s.r,0,6.3);c.fill()});
+    c.globalAlpha=1;
+    if(!sh&&!still&&ts>nx){shoot();nx=ts+5000+Math.random()*5000}
+    if(sh){sh.t+=.022;var hx=(sh.x-sh.t*.4)*W,hy=(sh.y+sh.t*.18)*H,g=c.createLinearGradient(hx,hy,hx+90,hy-40);
+      g.addColorStop(0,'rgba(255,255,255,'+(1-sh.t)+')');g.addColorStop(1,'rgba(255,255,255,0)');
+      c.strokeStyle=g;c.lineWidth=1.8;c.beginPath();c.moveTo(hx,hy);c.lineTo(hx+90,hy-40);c.stroke();if(sh.t>=1)sh=null}
+    if(still)run=false;else requestAnimationFrame(loop);
+  }
+  addEventListener('resize',function(){if(run)rs()});
+  return{start:function(){if(run)return;run=true;rs();nx=performance.now()+3000;requestAnimationFrame(loop)},stop:function(){run=false},shoot:shoot};
+}
+var roomSky=sky($('rsky'),34,true),lobbySky=sky($('lsky'),140,false);
+roomSky.start();
+
+/* benda interaktif di kamar */
+function say(t,x,y){var s=document.createElement('span');s.className='say';s.textContent=t;s.style.left=x+'%';s.style.top=y+'%';pl.appendChild(s);setTimeout(function(){s.remove()},2700)}
+var SP=[
+ ['Mawar',65.5,54,5.2,15.5,function(){for(var i=0;i<14;i++){var p=document.createElement('i');p.className='pt';p.style.left=(65.5+Math.random()*4)+'%';p.style.top=(53+Math.random()*3)+'%';
+   p.style.setProperty('--dx',(Math.random()*80-40)+'px');p.style.animationDelay=Math.random()*.6+'s';pl.appendChild(p);(function(q){setTimeout(function(){q.remove()},3400)})(p)}}],
+ ['Kucing',20.6,69,11.9,8.5,function(){say('z z Z',24.8,66);setTimeout(function(){say('Z',28,61)},400)}],
+ ['Astronot',73.7,59,5.3,9,function(){say('Halo! Monitornya di tengah ✦',76,55)}],
+ ['Teleskop',81.2,46,13.6,17,function(){roomSky.shoot();say('Ada bintang jatuh!',86.4,42)}],
+ ['Pangeran kecil',29,52.6,6.6,12,function(){say('Tolong gambarkan aku seekor domba?',32.2,48)}]];
+SP.forEach(function(a){var b=document.createElement('button');b.className='sp';b.setAttribute('aria-label',a[0]);
+  b.style.cssText='left:'+a[1]+'%;top:'+a[2]+'%;width:'+a[3]+'%;height:'+a[4]+'%';b.onclick=a[5];pl.appendChild(b)});
+room.addEventListener('pointermove',function(e){
+  if(busy||lobby.classList.contains('on'))return;
+  pl.style.setProperty('--px',((e.clientX/innerWidth-.5)*-16)+'px');pl.style.setProperty('--py',((e.clientY/innerHeight-.5)*-10)+'px')});
+
+/* masuk / keluar */
 function enter(){
-  var r=stage.getBoundingClientRect(),w=r.width,h=r.height,vw=innerWidth,vh=innerHeight;
-  var s=Math.max(vw/(w*.238),vh/(h*.248))*1.04;
-  stage.style.transformOrigin='52.1% 57.2%';
-  stage.style.transform='translate('+(-.021*w)+'px,'+(-.072*h)+'px) scale('+s+')';
+  busy=true;pl.style.setProperty('--px','0px');pl.style.setProperty('--py','0px');
+  var r=stage.getBoundingClientRect(),w=r.width,h=r.height,s=Math.max(innerWidth/(w*.2484),innerHeight/(h*.248))*1.04;
+  stage.style.transformOrigin='50% 57.2%';
+  stage.style.transform='translate(0px,'+(-.072*h)+'px) scale('+s+')';
   stage.classList.add('zoom');room.classList.add('in');
-  setTimeout(function(){app.classList.add('on');app.removeAttribute('aria-hidden');$('back').focus()},750);
+  setTimeout(function(){show('menu');lobby.classList.add('on');lobby.removeAttribute('aria-hidden');lobbySky.start();roomSky.stop();
+    var f=body.querySelector('button');if(f)f.focus()},800);
 }
 function leave(){
-  stopPlay();app.classList.remove('on');app.setAttribute('aria-hidden','true');
-  setTimeout(function(){stage.style.transform='';stage.classList.remove('zoom');room.classList.remove('in');$('hot').focus()},350);
+  lobby.classList.remove('on');lobby.setAttribute('aria-hidden','true');
+  setTimeout(function(){stage.style.transform='';stage.classList.remove('zoom');room.classList.remove('in');roomSky.start();lobbySky.stop();busy=false;$('hot').focus()},400);
 }
-$('hot').onclick=enter;$('back').onclick=leave;
-addEventListener('keydown',function(e){if(e.key==='Escape'&&app.classList.contains('on'))leave()});
+$('hot').onclick=enter;
+function back(){if(view!=='menu')show('menu');else leave()}
+$('back').onclick=back;
+addEventListener('keydown',function(e){if(e.key==='Escape'&&lobby.classList.contains('on')&&!$('box').open)back()});
 
-/* daftar objek */
-var ITEMS=WORKS.map(function(w,i){return{k:'w',i:i,t:w.t}}).concat([{k:'tentang',t:'Tentang'},{k:'kontak',t:'Kontak'}]);
-var list=$('list');
-function buildList(){
-  var h='<div class="row-i fold"><i class="ic c"></i>Scene Collection</div><div class="row-i fold" style="--d:1"><i class="ic c"></i>Karya</div>';
-  ITEMS.forEach(function(it,n){
-    if(n===WORKS.length)h+='<div class="row-i fold" style="--d:1"><i class="ic c"></i>Info</div>';
-    h+='<button class="row-i" style="--d:2" data-n="'+n+'"><i class="ic'+(it.k==='w'?'':' e')+'"></i>'+esc(it.t)+'</button>';
-  });
-  list.innerHTML=h;
-  list.onclick=function(e){var b=e.target.closest('[data-n]');if(b){stopPlay();pick(+b.dataset.n)}};
-}
-function pick(n,fromTl){
-  cur=n;var it=ITEMS[n];
-  [].forEach.call(list.querySelectorAll('[data-n]'),function(b){b.classList.toggle('on',+b.dataset.n===n)});
-  [].forEach.call(document.querySelectorAll('.tab'),function(b){b.classList.toggle('on',(b.dataset.go==='0'&&it.k==='w')||b.dataset.go===it.k)});
-  $('sel').textContent=it.t;
-  var vp=$('vp'),pr=$('props'),ov=$('ov');
-  if(it.k==='w'){
-    var w=WORKS[it.i];
-    ov.innerHTML='User Perspective<small>(1) Karya | '+esc(w.t)+'</small>';
-    vp.innerHTML='<div class="cam" style="--a:'+w.a+';--b:'+w.b+'"><span class="tag">Camera</span><div class="poster"><button class="play" aria-label="Putar '+esc(w.t)+'"></button></div></div>';
-    vp.querySelector('.play').onclick=function(){stopPlay();playVideo(w)};
-    pr.innerHTML='<div class="pn"><h4>Object</h4><div class="f">Nama<span>'+esc(w.t)+'</span></div><div class="f">Kategori<span>'+esc(w.cat)+'</span></div><div class="f">Software<span>'+esc(w.sw)+'</span></div><div class="f">Tahun<span>'+esc(w.yr)+'</span></div><div class="f">Durasi<span>'+esc(w.len)+'</span></div></div><div class="pn"><h4>Deskripsi</h4><p>'+esc(w.desc)+'</p></div>';
-  }else if(it.k==='tentang'){
-    ov.innerHTML='User Perspective<small>(1) Info | Tentang</small>';
-    vp.innerHTML='<div class="doc"><h2>'+esc(ME.name)+'</h2>'+ME.bio.map(function(p){return'<p>'+esc(p)+'</p>'}).join('')+'</div>';
-    pr.innerHTML='<div class="pn"><h4>Software</h4>'+ME.tools.map(function(t){return'<div class="f">Tool<span>'+esc(t)+'</span></div>'}).join('')+'</div>';
+/* isi lobby */
+$('nm').textContent=ME.name;
+$('soc').innerHTML=ME.links.map(function(l){return'<a href="'+esc(l[1])+'" target="_blank" rel="noopener">'+esc(l[0])+'</a>'}).join('');
+function show(v){
+  view=v;var h='';
+  if(v==='menu'){
+    h='<nav class="menu" aria-label="Menu utama">'+['animation','tools','about','contact'].map(function(m){return'<button data-go="'+m+'">'+m+'</button>'}).join('')+'</nav>';
+  }else if(v==='animation'){
+    h='<h2 class="h2">animation</h2><div class="cards">'+WORKS.map(function(w,i){
+      return'<button class="card" data-w="'+i+'" style="--a:'+w.a+';--b:'+w.b+(w.thumb?";--i:url('"+esc(w.thumb)+"')":'')+';animation-delay:'+i*.06+'s"><span class="th"></span><b>'+esc(w.t)+'</b><small>'+esc(w.cat)+' · '+esc(w.sw)+'</small></button>'}).join('')+'</div>';
+  }else if(v==='tools'){
+    h='<h2 class="h2">tools</h2><div class="txt">'+ME.tools.map(function(t){return'<div class="box" style="animation-delay:'+Math.random()*.2+'s">'+esc(t)+'</div>'}).join('')+'</div>';
+  }else if(v==='about'){
+    h='<h2 class="h2">about</h2><div class="txt">'+ME.bio.map(function(p){return'<p>'+esc(p)+'</p>'}).join('')+'</div>';
   }else{
-    ov.innerHTML='User Perspective<small>(1) Info | Kontak</small>';
-    vp.innerHTML='<div class="doc"><h2>Punya proyek?</h2><p>Terbuka untuk freelance, kolaborasi, dan kerja full-time. Kirim brief singkat dan aku balas secepatnya.</p><div class="row"><a class="b" style="width:auto;padding:6px 16px" href="mailto:'+esc(ME.email)+'">'+esc(ME.email)+'</a></div></div>';
-    pr.innerHTML='<div class="pn"><h4>Tautan</h4>'+ME.links.map(function(l){return'<a class="b" href="'+esc(l[1])+'" target="_blank" rel="noopener">'+esc(l[0])+'</a>'}).join('')+'</div>';
+    h='<h2 class="h2">contact</h2><div class="txt"><a class="box" href="mailto:'+esc(ME.email)+'">'+esc(ME.email)+'</a>'+ME.links.map(function(l){return'<a class="box" href="'+esc(l[1])+'" target="_blank" rel="noopener">'+esc(l[0])+'</a>'}).join('')+'</div>';
   }
-  if(!fromTl){frame=it.k==='w'?KF[it.i]:it.k==='tentang'?232:238;moveHead()}
-  [].forEach.call(document.querySelectorAll('.kf'),function(k,j){k.classList.toggle('on',it.k==='w'&&j===it.i)});
+  body.innerHTML=h;body.scrollTop=0;
 }
-function playVideo(w){
-  var cam=document.querySelector('.cam'),s=w.video;
-  if(!s){var n=document.createElement('div');n.className='note';n.textContent='Video belum ditambahkan. Isi "video" di index.html.';cam.appendChild(n);return}
-  var el=/\.(mp4|webm)$/i.test(s)?'<video src="'+esc(s)+'" controls autoplay></video>':'<iframe src="'+esc(s)+'" title="'+esc(w.t)+'" allow="autoplay; fullscreen" allowfullscreen></iframe>';
-  cam.insertAdjacentHTML('beforeend',el);
-}
-[].forEach.call(document.querySelectorAll('.tab'),function(b){
-  b.onclick=function(){stopPlay();var g=b.dataset.go;pick(g==='0'?0:ITEMS.findIndex(function(x){return x.k===g}))}
+body.addEventListener('click',function(e){
+  var g=e.target.closest('[data-go]'),w=e.target.closest('[data-w]');
+  if(g){show(g.dataset.go);var f=body.querySelector('.card,.box');if(f&&f.focus)f.focus({preventScroll:true})}
+  else if(w)openWork(+w.dataset.w);
 });
 
-/* timeline */
-var trk=$('trk'),ph=$('ph');
-(function(){
-  var h='';for(var f=0;f<=240;f+=20)h+='<i style="left:'+(f/240*100)+'%">'+(f||1)+'</i>';
-  $('rul').innerHTML=h;
-  KF.forEach(function(f,j){var k=document.createElement('button');k.className='kf';k.style.left=(f/240*100)+'%';k.setAttribute('aria-label','Keyframe '+WORKS[j].t);
-    k.onclick=function(e){e.stopPropagation();stopPlay();pick(j)};trk.appendChild(k)});
-})();
-function moveHead(){ph.style.left=(frame/240*100)+'%';$('phn').textContent=Math.round(frame);$('frm').textContent='Frame '+Math.round(frame)}
-trk.onclick=function(e){
-  stopPlay();var r=trk.getBoundingClientRect();frame=Math.max(1,Math.min(240,(e.clientX-r.left)/r.width*240));
-  var best=0;KF.forEach(function(f,j){if(Math.abs(f-frame)<Math.abs(KF[best]-frame))best=j});
-  pick(best,true);moveHead();
-};
-function stopPlay(){clearInterval(timer);timer=0;$('play').textContent='▶'}
-$('play').onclick=function(){
-  if(timer){stopPlay();return}
-  $('play').textContent='❚❚';
-  timer=setInterval(function(){
-    frame+=1;if(frame>240)frame=1;moveHead();
-    var j=KF.indexOf(Math.round(frame));if(j>-1)pick(j,true);
-  },1000/12);
-};
-
-buildList();pick(0);
+/* pemutar video */
+var dlg=$('box'),fr=$('fr');
+function openWork(i){
+  var w=WORKS[i],s=w.video;
+  fr.style.cssText='--a:'+w.a+';--b:'+w.b+(w.thumb?";--i:url('"+w.thumb+"')":'');
+  if(!s)fr.textContent='Video belum ditambahkan. Isi "video" di index.html.';
+  else if(/\.(mp4|webm)$/i.test(s))fr.innerHTML='<video src="'+esc(s)+'" controls autoplay></video>';
+  else fr.innerHTML='<iframe src="'+esc(s)+'" title="'+esc(w.t)+'" allow="autoplay; fullscreen" allowfullscreen></iframe>';
+  $('info').innerHTML='<h3>'+esc(w.t)+'</h3><p>'+esc(w.cat)+' · '+esc(w.sw)+' · '+esc(w.yr)+'</p><p style="margin-top:6px;color:var(--ink)">'+esc(w.desc)+'</p>';
+  dlg.showModal();
+}
+function closeW(){fr.innerHTML='';dlg.close()}
+dlg.querySelector('.x').onclick=closeW;
+dlg.addEventListener('click',function(e){if(e.target===dlg)closeW()});
+dlg.addEventListener('cancel',function(){fr.innerHTML=''});
 </script>
 </body>
 </html>
